@@ -42,7 +42,7 @@ contract YourContract {
     uint public tokenId;
     //mapping (address => bool) public approved;
     mapping (uint => address) public approvedList;
-    mapping (uint => address) public operatorList;
+    mapping (address => mapping (address => bool)) public operatorList;
 
     //currently declaring the owner as my local acct on scaffold-eth. Will be msg.sender later
     constructor(string memory _arbString) public {
@@ -69,35 +69,39 @@ contract YourContract {
 
     function safeTransferFrom(address _from, address _to, uint _tokenId, bytes memory data) external payable {
         //a tad confused as far as what the data field should represent
-        require(msg.sender == owner || operatorList[tokenId] == msg.sender || approvedList[tokenId] == msg.sender);
+        require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender);
         require(_from == owner && _from != address(0) && _tokenId == 1);
         owner = _to;
     }
 
     function safeTransferFrom(address _from, address _to, uint _tokenId) external payable {
-        require(msg.sender == owner || operatorList[tokenId] == msg.sender || approvedList[tokenId] == msg.sender);
+        require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender);
         require(_from == owner && _from != address(0) && _tokenId == 1);
         owner = _to;
     }
 
     function transferFrom(address _from, address _to, uint _tokenId) external payable {
-        require(msg.sender == owner || operatorList[tokenId] == msg.sender || approvedList[tokenId] == msg.sender);
+        require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender);
         require(_from == owner && _from != address(0) && _tokenId == 1);
         owner = _to;
     }
 
     function approve(address _approved, uint256 _tokenId) external payable {
-        require(msg.sender == owner || operatorList[tokenId] == msg.sender || approvedList[tokenId] == msg.sender);
+        require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender);
         require(_tokenId == tokenId);
         approvedList[tokenId] == _approved;
     }
 
     function setApprovalForAll(address _operator, bool _approved) external {
-        require(msg.sender == owner || operatorList[tokenId] == msg.sender || approvedList[tokenId] == msg.sender);
-        operatorList[tokenId] == _operator; 
+        require(msg.sender == owner || operatorList[owner][msg.sender] == true);
+        operatorList[owner][_operator] = _approved; 
     }
 
     function getApproved(uint _tokenId) external view returns (address) {
-        require(_tokenId == tokenId);
+        return approvedList[_tokenId];
+    }
+
+    function isApprovedForAll(address _owner, address _operator) external view returns (bool) {
+        return operatorList[_owner][_operator];
     }
 }
