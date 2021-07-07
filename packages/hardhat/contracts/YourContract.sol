@@ -70,19 +70,19 @@ contract YourContract {
     function safeTransferFrom(address _from, address _to, uint _tokenId, bytes memory data) external payable {
         //a tad confused as far as what the data field should represent
         require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender);
-        require(_from == owner && _from != address(0) && _tokenId == 1);
+        require(_from == owner && _from != address(0) && _tokenId == tokenId);
         owner = _to;
     }
 
     function safeTransferFrom(address _from, address _to, uint _tokenId) external payable {
         require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender);
-        require(_from == owner && _from != address(0) && _tokenId == 1);
+        require(_from == owner && _from != address(0) && _tokenId == tokenId);
         owner = _to;
     }
 
     function transferFrom(address _from, address _to, uint _tokenId) external payable {
         require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender);
-        require(_from == owner && _from != address(0) && _tokenId == 1);
+        require(_from == owner && _from != address(0) && _tokenId == tokenId);
         owner = _to;
     }
 
