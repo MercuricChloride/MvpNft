@@ -1,3 +1,8 @@
+# Minimum Viable NFT
+
+> A simple and stripped back minimal 1/1 NFT contract
+
+
 # 🏗 Scaffold-ETH
 
 > everything you need to build on Ethereum! 🚀
