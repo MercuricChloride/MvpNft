@@ -4,6 +4,18 @@
 
 Designed to be as simple and straightforward as possible, especially for the average joe viewing the token on etherscan!
 
+This example of the NFT stores a simple string at the top of the contract and contains a single tokenId (the example lists it as one but it could be whatever). 
+
+> But why is this cool?
+
+It reduces the amount of functions for the NFT to only provide what is neccessary for it to comply with the standard, leading to an easier to read contract and a better understanding of what is going on behind the scenes.
+
+> Some functions
+
+The balanceOf function run on an address will return a 1 if it is the owner of the contract, or a 0 if not as there is only 1 token Id.
+
+The ownerOf function returns the owner of the NFT if the tokenId is input, otherwise it returns the 0 address.
+
 # 🏄‍♂️ Quick Start
 
 Prerequisites: [Node](https://nodejs.org/dist/latest-v12.x/) plus [Yarn](https://classic.yarnpkg.com/en/docs/install/) and [Git](https://git-scm.com/downloads)
