@@ -25,7 +25,7 @@ interface ERC721TokenReceiver {
 }
 
 
-contract YourContract {
+contract YourContract is ERC721, ERC165 {
     /*
     The MVP NFT is a lightweight 1/1 NFT contract that conforms to the ERC721 standard in a way that makes it extremely simple for someone to understand what is going on from etherscan.
     Since the token is a 1/1, the tokenId is set to 1, however this could in theory be any value and would just need to update the rest of the contract
@@ -38,9 +38,9 @@ contract YourContract {
     mapping (uint => address) public approvedList;
     mapping (address => mapping (address => bool)) public operatorList;
 
-    event Transfer(address indexed _from, address indexed _to, uint256 indexed _tokenId);
-    event Approval(address indexed _owner, address indexed _approved, uint256 indexed _tokenId);
-    event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved);
+//    event Transfer(address indexed _from, address indexed _to, uint256 indexed _tokenId);
+//    event Approval(address indexed _owner, address indexed _approved, uint256 indexed _tokenId);
+//    event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved);
 
     //currently declaring the owner as my local acct on scaffold-eth. Will be msg.sender later
     constructor(string memory _arbString) {
@@ -50,7 +50,7 @@ contract YourContract {
         emit Transfer(address(0), address(0), tokenId);
     }
 
-    function balanceOf(address queryAddress) external view returns (uint) {
+    function balanceOf(address queryAddress) external view override returns (uint) {
         if(queryAddress == owner) {
             return 1;
         } else {
@@ -58,7 +58,7 @@ contract YourContract {
         }
     }
 
-    function ownerOf(uint _tokenId) external view returns (address) {
+    function ownerOf(uint _tokenId) external view override returns (address) {
         if(_tokenId == tokenId) {
             return owner;
         } else {
@@ -66,7 +66,7 @@ contract YourContract {
         }
     }
 
-    function safeTransferFrom(address _from, address _to, uint _tokenId, bytes memory data) external payable {
+    function safeTransferFrom(address _from, address _to, uint _tokenId, bytes memory data) external override payable {
         require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender);
         require(_from == owner && _from != address(0) && _tokenId == tokenId);
         ERC721TokenReceiver(_to).onERC721Received(_from, _from, _tokenId, data);
@@ -74,7 +74,7 @@ contract YourContract {
         owner = _to;
     }
 
-    function coolTransferFrom(address _from, address _to, uint _tokenId) external payable {
+    function safeTransferFrom(address _from, address _to, uint _tokenId) external override payable {
         require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender);
         require(_from == owner && _from != address(0) && _tokenId == tokenId);
         ERC721TokenReceiver(_to).onERC721Received(_from, _from, _tokenId, "");
@@ -82,35 +82,35 @@ contract YourContract {
         owner = _to;
     }
 
-    function transferFrom(address _from, address _to, uint _tokenId) external payable {
+    function transferFrom(address _from, address _to, uint _tokenId) external override payable {
         require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender);
         require(_from == owner && _from != address(0) && _tokenId == tokenId);
         emit Transfer(_from, _to, _tokenId);
         owner = _to;
     }
 
-    function approve(address _approved, uint256 _tokenId) external payable {
+    function approve(address _approved, uint256 _tokenId) external override payable {
         require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender);
         require(_tokenId == tokenId);
         emit Approval(owner, _approved, _tokenId);
         approvedList[tokenId] == _approved;
     }
 
-    function setApprovalForAll(address _operator, bool _approved) external {
+    function setApprovalForAll(address _operator, bool _approved) external override {
         require(msg.sender == owner || operatorList[owner][msg.sender] == true);
         emit ApprovalForAll(owner, _operator, _approved);
         operatorList[owner][_operator] = _approved; 
     }
 
-    function getApproved(uint _tokenId) external view returns (address) {
+    function getApproved(uint _tokenId) external view override returns (address) {
         return approvedList[_tokenId];
     }
 
-    function isApprovedForAll(address _owner, address _operator) external view returns (bool) {
+    function isApprovedForAll(address _owner, address _operator) external view override returns (bool) {
         return operatorList[_owner][_operator];
     }
 
-    function supportsInterface(bytes4 interfaceID) external pure returns (bool) {
+    function supportsInterface(bytes4 interfaceID) external pure override returns (bool) {
        return interfaceID == 0x80ac58cd ||
               interfaceID == 0x01ffc9a7;
     }
