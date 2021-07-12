@@ -415,6 +415,13 @@ function App(props) {
               address={address}
               blockExplorer={blockExplorer}
             />
+            <Contract
+              name="ShouldntHoldNFT"
+              signer={userSigner}
+              provider={localProvider}
+              address={address}
+              blockExplorer={blockExplorer}
+            />
           </Route>
           <Route path="/hints">
             <Hints
