@@ -6,20 +6,20 @@ import React, { useState } from "react";
 import { Address, AddressInput } from "../components";
 import { useTokenList, useContractReader} from "../hooks";
 
-export default function Hints({ readContracts, writeContracts, tx, yourLocalBalance, mainnetProvider, price, address }) {
+export default function Hints ({ readContracts, writeContracts, tx, yourLocalBalance, mainnetProvider, price, address }) {
 
     const [fromAddress, setFromAddress] = useState();
     const [toAddress, setToAddress] = useState();
     const owner = useContractReader(readContracts, "YourContract", "owner") 
     function onFinish() {
-    tx(writeContracts.YourContract.safeTransferFrom(fromAddress, toAddress, 1, ""));
+tx(writeContracts.YourContract['safeTransferFrom(address,address,uint256)'](fromAddress, toAddress, 1))
     }
 
   return (
     <div style={{margin: 32}}>
       <Row justify="center">
             <Col span={6}>
-            <Card title="Minimum Viable NFT">
+            <Card title="SafeTransferFrom">
             <Form 
                 name="MinimumViableNFT"
             >

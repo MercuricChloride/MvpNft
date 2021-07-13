@@ -365,7 +365,7 @@ function App(props) {
               }}
               to="/hints"
             >
-              NFT UI 
+             NFT UI 
             </Link>
           </Menu.Item>
         </Menu>

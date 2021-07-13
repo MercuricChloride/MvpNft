@@ -1,8 +1,6 @@
 pragma solidity >=0.8.0 <0.9.0;
 //SPDX-License-Identifier: MIT
 
-//import "hardhat/console.sol";
-
 interface ERC721 {
     event Transfer(address indexed _from, address indexed _to, uint256 indexed _tokenId);
     event Approval(address indexed _owner, address indexed _approved, uint256 indexed _tokenId);
@@ -32,14 +30,13 @@ contract YourContract is ERC721, ERC165 {
     */
 
     //arbitrary string to be stored at the top of the contract
-    string public arbString;
+    string public arbString = "Scaffold-eth RULES!";
     address public owner; 
     uint public tokenId;
     mapping (uint => address) public approvedList;
     mapping (address => mapping (address => bool)) public operatorList;
     //currently declaring the owner as my local acct on scaffold-eth. Will be msg.sender later
-    constructor(string memory _arbString) {
-        arbString = _arbString;
+    constructor() {
         owner = 0xC9FFEe9e34723d882CB97a6c056100661d00Bfe1;
         tokenId = 1;
         emit Transfer(address(0), address(0), tokenId);
@@ -64,24 +61,6 @@ contract YourContract is ERC721, ERC165 {
             return owner;
         } else {
             return address(0);
-        }
-    }
-
-    function safeTransferFromShouldWorkNow(address _from, address _to, uint _tokenId) external payable {
-        require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender);
-        require(_from == owner && _from != address(0) && _tokenId == tokenId);
-        if(isContract(_to)) {
-            if(ERC721TokenReceiver(_to).onERC721Received(msg.sender, _from, _tokenId, "") == 0x150b7a02) {
-                emit Transfer(_from, _to, _tokenId);
-                owner = _to;
-            }
-            else {
-                revert("receiving address unable to hold ERC721!");
-            }
-        }
-        else {
-            emit Transfer(_from, _to, _tokenId);
-            owner = _to;
         }
     }
 
