@@ -429,6 +429,9 @@ function App(props) {
               yourLocalBalance={yourLocalBalance}
               mainnetProvider={mainnetProvider}
               price={price}
+              tx={tx}
+              readContracts={readContracts}
+              writeContracts={writeContracts}
             />
           </Route>
           <Route path="/exampleui">
