@@ -34,7 +34,7 @@ contract MVPNFT is ERC721, ERC165 {
     address public owner; 
     uint public tokenId = 1;
     mapping (uint => address) public approvedList;
-    //currently declaring the owner as my local acct on scaffold-eth. Will be msg.sender later
+    //currently declaring the owner as my local acct on scaffold-eth
     constructor() {
         owner = 0xC9FFEe9e34723d882CB97a6c056100661d00Bfe1;
         emit Transfer(address(0), address(0), tokenId);
@@ -68,12 +68,14 @@ contract MVPNFT is ERC721, ERC165 {
         if(isContract(_to)) {
             if(ERC721TokenReceiver(_to).onERC721Received(msg.sender, _from, _tokenId, data) == 0x150b7a02) {
                 emit Transfer(_from, _to, _tokenId);
+                approvedList[tokenId] = address(0);
                 owner = _to;
             } else {
                 revert("receiving address unable to hold ERC721!");
             }
         } else {
             emit Transfer(_from, _to, _tokenId);
+            approvedList[tokenId] = address(0);
             owner = _to;
         }
     }
@@ -84,6 +86,7 @@ contract MVPNFT is ERC721, ERC165 {
         if(isContract(_to)) {
             if(ERC721TokenReceiver(_to).onERC721Received(msg.sender, _from, _tokenId, "") == 0x150b7a02) {
                 emit Transfer(_from, _to, _tokenId);
+                approvedList[tokenId] = address(0);
                 owner = _to;
             }
             else {
@@ -92,6 +95,7 @@ contract MVPNFT is ERC721, ERC165 {
         }
         else {
             emit Transfer(_from, _to, _tokenId);
+            approvedList[tokenId] = address(0);
             owner = _to;
         }
     }
@@ -100,6 +104,7 @@ contract MVPNFT is ERC721, ERC165 {
         require(msg.sender == owner || approvedList[tokenId] == msg.sender, "Msg.sender not allowed to transfer this NFT!");
         require(_from == owner && _from != address(0) && _tokenId == tokenId);
         emit Transfer(_from, _to, _tokenId);
+        approvedList[tokenId] = address(0);
         owner = _to;
     }
 
