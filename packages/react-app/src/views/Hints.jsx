@@ -10,9 +10,9 @@ export default function Hints ({ readContracts, writeContracts, tx, yourLocalBal
 
     const [fromAddress, setFromAddress] = useState();
     const [toAddress, setToAddress] = useState();
-    const owner = useContractReader(readContracts, "YourContract", "owner") 
+    const owner = useContractReader(readContracts, "MVPNFT", "owner") 
     function onFinish() {
-tx(writeContracts.YourContract['safeTransferFrom(address,address,uint256)'](fromAddress, toAddress, 1))
+tx(writeContracts.MVPNFT['safeTransferFrom(address,address,uint256)'](fromAddress, toAddress, 1))
     }
 
   return (

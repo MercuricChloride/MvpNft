@@ -355,7 +355,7 @@ function App(props) {
               }}
               to="/"
             >
-              YourContract
+              MVPNFT 
             </Link>
           </Menu.Item>
           <Menu.Item key="/hints">
@@ -365,7 +365,7 @@ function App(props) {
               }}
               to="/hints"
             >
-             NFT UI 
+             SAMPLE NFT UI
             </Link>
           </Menu.Item>
         </Menu>
@@ -379,7 +379,7 @@ function App(props) {
             */}
 
             <Contract
-              name="YourContract"
+              name="MVPNFT"
               signer={userSigner}
               provider={localProvider}
               address={address}

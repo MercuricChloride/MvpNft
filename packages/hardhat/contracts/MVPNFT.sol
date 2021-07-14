@@ -23,7 +23,7 @@ interface ERC721TokenReceiver {
 }
 
 
-contract YourContract is ERC721, ERC165 {
+contract MVPNFT is ERC721, ERC165 {
     /*
     The MVP NFT is a lightweight 1/1 NFT contract that conforms to the ERC721 standard in a way that makes it extremely simple for someone to understand what is going on from etherscan.
     Since the token is a 1/1, the tokenId is set to 1, however this could in theory be any value and would just need to update the rest of the contract
@@ -32,13 +32,12 @@ contract YourContract is ERC721, ERC165 {
     //arbitrary string to be stored at the top of the contract
     string public arbString = "Scaffold-eth RULES!";
     address public owner; 
-    uint public tokenId;
+    uint public tokenId = 1;
     mapping (uint => address) public approvedList;
     mapping (address => mapping (address => bool)) public operatorList;
     //currently declaring the owner as my local acct on scaffold-eth. Will be msg.sender later
     constructor() {
         owner = 0xC9FFEe9e34723d882CB97a6c056100661d00Bfe1;
-        tokenId = 1;
         emit Transfer(address(0), address(0), tokenId);
     }
 
@@ -48,8 +47,8 @@ contract YourContract is ERC721, ERC165 {
       return size > 0;
     }
 
-    function balanceOf(address queryAddress) external view override returns (uint) {
-        if(queryAddress == owner) {
+    function balanceOf(address _queryAddress) external view override returns (uint) {
+        if(_queryAddress == owner) {
             return 1;
         } else {
             return 0;
@@ -65,7 +64,7 @@ contract YourContract is ERC721, ERC165 {
     }
 
     function safeTransferFrom(address _from, address _to, uint _tokenId, bytes memory data) external override payable {
-        require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender);
+        require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender, "Msg.sender not allowed to transfer this NFT!");
         require(_from == owner && _from != address(0) && _tokenId == tokenId);
         if(isContract(_to)) {
             if(ERC721TokenReceiver(_to).onERC721Received(msg.sender, _from, _tokenId, data) == 0x150b7a02) {
@@ -81,7 +80,7 @@ contract YourContract is ERC721, ERC165 {
     }
 
     function safeTransferFrom(address _from, address _to, uint _tokenId) external override payable {
-        require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender);
+        require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender, "Msg.sender not allowed to transfer this NFT!");
         require(_from == owner && _from != address(0) && _tokenId == tokenId);
         if(isContract(_to)) {
             if(ERC721TokenReceiver(_to).onERC721Received(msg.sender, _from, _tokenId, "") == 0x150b7a02) {
@@ -99,21 +98,21 @@ contract YourContract is ERC721, ERC165 {
     }
 
     function transferFrom(address _from, address _to, uint _tokenId) external override payable {
-        require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender);
+        require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender, "Msg.sender not allowed to transfer this NFT!");
         require(_from == owner && _from != address(0) && _tokenId == tokenId);
         emit Transfer(_from, _to, _tokenId);
         owner = _to;
     }
 
     function approve(address _approved, uint256 _tokenId) external override payable {
-        require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender);
+        require(msg.sender == owner || operatorList[owner][msg.sender] == true || approvedList[tokenId] == msg.sender, "Msg.sender not allowed to transfer this NFT!");
         require(_tokenId == tokenId);
         emit Approval(owner, _approved, _tokenId);
         approvedList[tokenId] == _approved;
     }
 
     function setApprovalForAll(address _operator, bool _approved) external override {
-        require(msg.sender == owner || operatorList[owner][msg.sender] == true);
+        require(msg.sender == owner || operatorList[owner][msg.sender] == true, "Msg.sender not allowed to set approval for all!");
         emit ApprovalForAll(owner, _operator, _approved);
         operatorList[owner][_operator] = _approved; 
     }
